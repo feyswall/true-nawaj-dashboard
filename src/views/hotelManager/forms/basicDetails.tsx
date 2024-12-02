@@ -9,6 +9,7 @@ type BasicDetailsData = {
   address: string
   coordinates: { lat: number; lng: number } | {}
   city: string
+  state: string
   country: string
   postalCode: string
 }
@@ -26,6 +27,7 @@ export default function BasicDetails({ data, onSave }: BasicDetailsProps): JSX.E
     address: '',
     coordinates: {},
     city: '',
+    state: '',
     country: '',
     postalCode: '',
     ...data
@@ -121,6 +123,18 @@ export default function BasicDetails({ data, onSave }: BasicDetailsProps): JSX.E
             onChange={handleChange}
           />
         </Grid>
+
+        <Grid item xs={12} sm={6}>
+          <TextField
+            required
+            fullWidth
+            label='state'
+            name='state'
+            value={formData.state}
+            onChange={handleChange}
+          />
+        </Grid>
+
         <Grid item xs={12} sm={6}>
           <TextField
             required

@@ -68,7 +68,6 @@ const PropertiesTableView: React.FC<PropertiesProps> = ({ incomeDefaultQueryPara
 
   return (
     <Card>
-      <h2>Data count {allItemCount ?? 0} </h2>
       <div className='overflow-x-auto'>
         <table className={tableStyles.table}>
           <thead>

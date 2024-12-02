@@ -10,15 +10,12 @@ import {
   IconButton,
   Dialog,
   DialogTitle,
-  DialogContent,
-  DialogActions
+  DialogContent
 } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
-import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
-import dayjs from 'dayjs'
 
 const RoomForm = ({ room, onSave, onCancel }) => {
   const [roomData, setRoomData] = useState({
@@ -204,9 +201,9 @@ const Rooms = ({ data, onSave }) => {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Box>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
-          <Typography variant='h6'>Room Types</Typography>
+          <Typography variant='h6'>Property Rooms</Typography>
           <Button variant='contained' onClick={handleAddRoom}>
-            Add Room Type
+            Add Rooms
           </Button>
         </Box>
 

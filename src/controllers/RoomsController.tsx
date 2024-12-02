@@ -1,9 +1,9 @@
-import type { DocumentReference } from 'firebase/firestore';
+import { Timestamp, type DocumentReference } from 'firebase/firestore';
 
 import type { RoomType } from '@/types/modelTypes/RoomType';
 import Room from '@/models/Room';
 
-export class OwnersController {
+export class RoomsController {
   public create = async <T extends RoomType>(data: T): Promise<DocumentReference> => {
     const myRoom: RoomType = {
       id: data.id,
@@ -20,4 +20,28 @@ export class OwnersController {
 
     return output;
   }
+
+
+  static  registerRooms = async (rooms: Record<string, any>[], propertyId: string) => {
+    // start by registering the rooms
+
+    rooms.forEach(async (room: Record<string, any>) => {
+      const roomRegisteringData = {
+        photos: {},
+        property_id: propertyId,
+        room_number: room.roomNumber,
+        type: room.roomType,
+        basePrice: room.basePrice,
+        hightPrice: room.seasonalPrices.highSeason,
+        lowPrice: room.seasonalPrices.lowSeason,
+        occupancy: room.occupancy,
+        description: room.description,
+        created_at: Timestamp.now(),
+        updated_at: null
+      }
+      await Room.create(Room.collectionName, roomRegisteringData)
+    })
+  }
+
+
 }

@@ -2,6 +2,7 @@ import { type Timestamp } from "firebase/firestore";
 
 export type RoomType = {
   id?: string;
+  photos: [],
   property_id: string;
   room_number: string;
   type: 'single' | 'double' | 'suite' | string;

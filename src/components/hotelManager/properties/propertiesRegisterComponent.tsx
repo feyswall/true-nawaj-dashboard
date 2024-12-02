@@ -87,7 +87,7 @@ export default function RegisterPropertyFormComponent(): JSX.Element {
       location: {
         address: basicDetails.address,
         city: basicDetails.city,
-        state: 'unguja town',
+        state: basicDetails.state,
         country: basicDetails.country,
         zipCode: basicDetails.postalCode
       }
@@ -210,6 +210,7 @@ export default function RegisterPropertyFormComponent(): JSX.Element {
 
     rooms.forEach(async room => {
       const roomRegisteringData = {
+        photos: {},
         property_id: propertyId,
         room_number: room.roomNumber,
         type: room.roomType,
