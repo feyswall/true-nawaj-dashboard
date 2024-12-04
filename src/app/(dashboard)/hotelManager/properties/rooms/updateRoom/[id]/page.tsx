@@ -240,17 +240,16 @@ export default function UpdateRoom() {
             <Typography variant='h6'>Photos</Typography>
             <ImageUploadModal roomId={params.id} reloadImages={reloadImagesFunct}></ImageUploadModal>
           </Box>
-
           <ImageList sx={{ width: '100%' }} cols={3} rowHeight={200}>
-            {roomData.photos?.map((photo: string, index: number) => (
-              <ImageListItem key={index}>
-                <img src={photo} alt={`room photo ${index + 1}`} loading='lazy' />
+            {Object.entries(roomData.photos).map(([key, value], index) => {
+              console.log(value)
+              return <ImageListItem key={index}>
+                <img src={value} alt={`room photo ${index + 1}`} loading='lazy' />
               </ImageListItem>
-            ))}
+})}
           </ImageList>
         </CardContent>
       </Card>
-
     </Container>
   )
 }

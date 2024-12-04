@@ -55,7 +55,7 @@ const ImageUploadModal: React.FC<imageUploadPropType> = ({roomId, reloadImages})
 
   const imageUpload = async () => {
     setLoading(true)
-    if (images.length > 0) {
+    if (images?.length > 0) {
       // Handle the image upload logic here
       const imagesUrl = []
 
@@ -81,9 +81,13 @@ const ImageUploadModal: React.FC<imageUploadPropType> = ({roomId, reloadImages})
 
   return (
     <div>
-      <Button variant='contained' color='primary' startIcon={<AddPhotoAlternateIcon />} onClick={handleOpen}>
-        Add Image
-      </Button>
+      {
+        (
+          <Button variant='contained' color='primary' startIcon={<AddPhotoAlternateIcon />} onClick={handleOpen}>
+          Add Image
+        </Button>
+        )
+      }
       <Dialog open={open} onClose={handleClose} maxWidth='md' fullWidth>
         <DialogTitle>Add Room Images</DialogTitle>
         <DialogContent>
@@ -96,9 +100,13 @@ const ImageUploadModal: React.FC<imageUploadPropType> = ({roomId, reloadImages})
                 justifyContent='flex-end' // Align items to the right
                 padding={2} // Optional padding
               >
-                <Button variant='contained' color='primary' onClick={imageUpload}>
-                  Save Images
-                </Button>
+                {
+                  images?.length > 0 && (
+                    <Button variant='contained' color='primary' onClick={imageUpload}>
+                    Save Images
+                  </Button>
+                  )
+                }
               </Box>
               <Photos onSave={handleImageChange} data={images}></Photos>
             </div>

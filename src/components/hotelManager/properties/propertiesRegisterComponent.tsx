@@ -210,7 +210,7 @@ export default function RegisterPropertyFormComponent(): JSX.Element {
 
     rooms.forEach(async room => {
       const roomRegisteringData = {
-        photos: {},
+        photos: [],
         property_id: propertyId,
         room_number: room.roomNumber,
         type: room.roomType,

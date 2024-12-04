@@ -9,7 +9,6 @@ interface PropertyPageProps {
 const PropertyPage: React.FC<PropertyPageProps> = async ({ params }) => {
   // use collection to monitor rooms
   const { id } = params
-
   return (
     <PropertyShowComponent propertyId={id} ></PropertyShowComponent>
   )

@@ -22,12 +22,11 @@ export class RoomsController {
   }
 
 
-  static  registerRooms = async (rooms: Record<string, any>[], propertyId: string) => {
-    // start by registering the rooms
-
-    rooms.forEach(async (room: Record<string, any>) => {
+  static registerRooms = async (rooms: Record<string, any>[], propertyId: string) => {
+    // Start by registering the rooms one by one
+    for (const room of rooms) {
       const roomRegisteringData = {
-        photos: {},
+        photos: [],
         property_id: propertyId,
         room_number: room.roomNumber,
         type: room.roomType,
@@ -37,11 +36,13 @@ export class RoomsController {
         occupancy: room.occupancy,
         description: room.description,
         created_at: Timestamp.now(),
-        updated_at: null
-      }
-      await Room.create(Room.collectionName, roomRegisteringData)
-    })
-  }
+        updated_at: null,
+      };
+
+      // Ensure this operation completes before moving to the next room
+      await Room.create(Room.collectionName, roomRegisteringData);
+    }
+  };
 
 
 }
