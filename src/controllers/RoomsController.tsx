@@ -38,10 +38,25 @@ export class RoomsController {
         created_at: Timestamp.now(),
         updated_at: null,
       };
-
       // Ensure this operation completes before moving to the next room
       await Room.create(Room.collectionName, roomRegisteringData);
     }
+    // const roomRegisteringData = {
+    //   photos: [],
+    //   property_id: propertyId,
+    //   room_number: room.roomNumber,
+    //   type: room.roomType,
+    //   basePrice: room.basePrice,
+    //   hightPrice: room.seasonalPrices.highSeason,
+    //   lowPrice: room.seasonalPrices.lowSeason,
+    //   occupancy: room.occupancy,
+    //   description: room.description,
+    //   created_at: Timestamp.now(),
+    //   updated_at: null
+    // }
+    // await Room.create(Room.collectionName, roomRegisteringData)
+
+
   };
 
 

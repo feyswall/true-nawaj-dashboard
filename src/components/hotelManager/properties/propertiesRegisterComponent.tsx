@@ -19,6 +19,9 @@ import { useAuth } from '@/hooks/useAuth'
 import Room from '@/models/Room'
 import { useRouter } from 'next/navigation'
 import LocationPicker from '@/views/shared/LocationPicker'
+import { RoomsController } from '@/controllers/RoomsController'
+import { FilesController } from '@/controllers/FilesController'
+import { PropertiesController } from '@/controllers/PropertiesController'
 
 interface AmenityType {
   icon: string
@@ -75,133 +78,36 @@ export default function RegisterPropertyFormComponent(): JSX.Element {
   })
 
   const registerBasicDetails = async (formData: FormDataType, property: Record<string, any> | null) => {
-    const { basicDetails } = formData
+    const { basicDetails } = formData;
     // start creating the data
-    const data = {
-      managerId: user?.uid,
-      name: basicDetails.propertyName,
-      description: basicDetails.description,
-      type: basicDetails.propertyType,
-      showAsPopular: false,
-      status: 'Active',
-      location: {
-        address: basicDetails.address,
-        city: basicDetails.city,
-        state: basicDetails.state,
-        country: basicDetails.country,
-        zipCode: basicDetails.postalCode
-      }
-    }
-    // console.log(data)
-    return await Property.create(Property.collectionName, data)
+    return await PropertiesController.registerBasicDetails(basicDetails, user?.uid);
   }
 
   const registerCoordinates = async (formData: FormDataType, propertyId: string) => {
     const { location } = formData
-    if (propertyId) {
-      // updating the property with amenity data
-      const propertyInstance = new Property();
-      const output = await Property.find<Record<string, any>>(Property.collectionName, propertyId)
-      if (output) {
-        const keyValue = "location.coordinates";
-        await propertyInstance.updateDoc(propertyId, { [keyValue]: location });
-      }
-    }
+    await PropertiesController.updateCoordinates(location, propertyId);
   }
 
   const registerAmenities = async (formData: FormDataType, propertyId: string) => {
     const { amenities } = formData
-    // Get only keys with `true` values
-    const selectedAmenities = Object.keys(amenities)
-      .filter(key => amenities[key])
-      .map(key => `/amenities/${key}`)
-
-    if (propertyId) {
-      // updating the property with amenity data
-      const propertyInstance = new Property()
-      const output = await Property.find<Record<string, any>>(Property.collectionName, propertyId)
-      if (output) {
-        await propertyInstance.updateDoc(propertyId, { amenities: selectedAmenities })
-      }
-    }
+    await PropertiesController.updateAmenities(amenities, propertyId);
   }
 
-  const handleUpload = async (file: File): Promise<{ status: string; imageUrl?: string; message?: string }> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader()
-
-      reader.onloadend = async () => {
-        const base64 = reader.result?.toString().split(',')[1]
-        if (!base64) {
-          resolve({ status: 'fail', message: 'Invalid image' })
-          return
-        }
-        try {
-          const response: Record<string, any> = await uploadImage({
-            imageBase64: base64,
-            filename: file.name
-          })
-          resolve({ status: 'success', imageUrl: response.data.image })
-        } catch (error: any) {
-          resolve({ status: 'fail', message: error.message })
-        }
-      }
-      reader.onerror = error => {
-        reject({ status: 'fail', message: 'Error reading file', error })
-      }
-
-      reader.readAsDataURL(file)
-    })
-  }
 
   const registerPhotos = async (formData: FormDataType, propertyId: string) => {
     const { photos } = formData
-    const imagesUrl = []
-
-    for (const photo of photos) {
-      const res = await handleUpload(photo)
-      if (res.status === 'success') {
-        imagesUrl.push(res.imageUrl)
-      }
-    }
-    const propertyInstance = new Property()
-    const output = await Property.find<Record<string, any>>(Property.collectionName, propertyId)
-    if (output) {
-      await propertyInstance.updateDoc(propertyId, { photos: imagesUrl })
-    }
+    let convPhotos = photos as any;
+    await PropertiesController.updatePhotos(convPhotos, propertyId);
   }
 
   const registerContact = async (formData: FormDataType, propertyId: string) => {
     const { contact } = formData
-    const propertyInstance = new Property()
-    const outcome = await Property.find<Record<string, any>>(Property.collectionName, propertyId)
-    if (outcome) {
-      await propertyInstance.updateDoc(propertyId, { contact: contact })
-    }
+    await PropertiesController.updateContacts(contact, propertyId);
   }
 
   const registerPolicy = async (FormData: FormDataType, propertyId: string) => {
     const { policies } = FormData
-    const propertyInstance = new Property()
-    const output = await Property.find<Record<string, any>>(Property.collectionName, propertyId)
-    if (output) {
-      const cIn = policies.checkInTime
-      const cOut = policies.checkOutTime
-      const policyData = {
-        cancellationPolicies: policies.additionalPolicies,
-        checkIn: Timestamp.fromDate(cIn.toDate()),
-        checkOut: Timestamp.fromDate(cOut.toDate()),
-        cancellationDeadline: policies.cancellationDeadline,
-        cancellationPenalty: policies.cancellationPenalty,
-        minAge: policies.minAge,
-        depositRequired: policies.depositRequired,
-        depositAmount: policies.depositAmount,
-        petsAllowed: policies.petsAllowed,
-        smokingAllowed: policies.smokingAllowed,
-        partyAllowed: policies.partyAllowed
-      }
-      await propertyInstance.updateDoc(propertyId, { policies: policyData })
-    }
+    await PropertiesController.updatePolicies(policies, propertyId);
   }
 
   const registerRooms = async (FormData: FormDataType, propertyId: string) => {
@@ -209,20 +115,7 @@ export default function RegisterPropertyFormComponent(): JSX.Element {
     const { rooms } = FormData
 
     rooms.forEach(async room => {
-      const roomRegisteringData = {
-        photos: [],
-        property_id: propertyId,
-        room_number: room.roomNumber,
-        type: room.roomType,
-        basePrice: room.basePrice,
-        hightPrice: room.seasonalPrices.highSeason,
-        lowPrice: room.seasonalPrices.lowSeason,
-        occupancy: room.occupancy,
-        description: room.description,
-        created_at: Timestamp.now(),
-        updated_at: null
-      }
-      await Room.create(Room.collectionName, roomRegisteringData)
+      await RoomsController.registerRooms(rooms, propertyId);
     })
   }
 
